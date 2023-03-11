@@ -109,6 +109,31 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(review_desc)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):    
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/b08b2532-fe14-4f3d-9594-cdff4bd82bed/dealership-package/post-review"
+    if (request.user.is_authenticated):
+        review = dict()
+        review["id"] = 0
+        review["dealership"] = dealer_id 
+        review["name"] = request.POST["name"]
+        review["review"] = request.POST["content"]
+        if ("purchasecheck" in request.POST):
+            review["purchase"] = True
+        else:
+            review["purchase"] = False
+        if review["purchase"] == True:
+            review["purchase_date"] = request.POST["purchase_date"]
+            review["car_make"] = request.POST["car_make"]
+            review["car_model"] = request.POST["car_model"]
+            review["car_year"] = request.POST["car_year"]
+        else:
+            review["purchase_date"] = ""
+            review["car_make"] = ""
+            review["car_model"] = ""
+            review["car_year"] = ""
+    json_payload = {}
+    json_payload["review"] = review
+    response = post_request(url, json_payload)
+                
+
 

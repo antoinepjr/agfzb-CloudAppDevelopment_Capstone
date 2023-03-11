@@ -31,7 +31,15 @@ def get_request(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, payload, **kwargs):
+    try:
+        response = requests.post(url, params=kwargs, json=payload)
+    except:
+        print("Network exception occurred")
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    data = json.loads(response.text)
+    return data
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 def get_dealers_from_cf(url, **kwargs):
@@ -117,7 +125,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
 def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-    API_KEY = 
+    API_KEY = ""
     NLU_URL = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/6aa36569-933f-46ad-abc2-86e22ad3c795"
     authenticator = IAMAuthenticator(API_KEY)
     natural_language_understanding = NaturalLanguageUnderstandingV1(
