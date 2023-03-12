@@ -37,9 +37,8 @@ def post_request(url, payload, **kwargs):
     except:
         print("Network exception occurred")
     status_code = response.status_code
-    print("With status {} ".format(status_code))
-    data = json.loads(response.text)
-    return data
+    print("With status {} ".format(status_code))        
+    return status_code
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 def get_dealers_from_cf(url, **kwargs):
@@ -100,9 +99,10 @@ def get_dealer_reviews_from_cf(url, dealerId):
     # Call get_request with a URL parameter
     json_result = get_request(url, dealerId=dealerId)
     if json_result:
+        i=0
         reviews = json_result["review"]["docs"]
         for review in reviews:
-            review_doc = reviews[0]
+            review_doc = reviews[i]
             if review_doc["purchase"] == True:
                 review_obj = DealerReview(dealership=review_doc["dealership"],
                                           name=review_doc["name"],
@@ -125,6 +125,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
                                         car_year='',
                                         sentiment=analyze_review_sentiments(review_doc["review"]),                                      
                                         id=review_doc["id"])
+            i = i + 1
             results.append(review_obj)
 
     return results
@@ -133,7 +134,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
 def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-    API_KEY = ""
+    API_KEY = "Bsu9PaR7Igc4D-R1iCeeA6CUhdo8lXEnJPEYM9Hbjo_9"
     NLU_URL = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/6aa36569-933f-46ad-abc2-86e22ad3c795"
     authenticator = IAMAuthenticator(API_KEY)
     natural_language_understanding = NaturalLanguageUnderstandingV1(

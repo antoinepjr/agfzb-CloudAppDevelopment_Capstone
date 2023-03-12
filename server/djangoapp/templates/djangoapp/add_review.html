@@ -49,7 +49,7 @@
             <div class="row">
                 <div class="col-md">
                     <h4 class="mb-5"> Add a review for <strong>{{dealer.full_name}}</strong></h4>
-                    <form action = "{% url 'djangoapp:add_review' dealer.id %}" method="post">
+                    <form action = "{% url 'djangoapp:add_review' dealer.id %}" method="POST">
                         <H5>Your Name:</H5><br>
                         {% csrf_token %}
                         <input class="form-control" id="name" name="name" size="30" required></textarea><br>
